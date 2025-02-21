@@ -7,13 +7,26 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express(); 
 const PORT = process.env.PORT || 3000;
 
-// ✅ Enable CORS before defining routes
+// ✅ Enable CORS for both localhost and deployed frontend
+const allowedOrigins = [
+    "http://localhost:3001", // Local frontend
+    "https://bajajfrontend-xi.vercel.app/" // Replace with your Vercel frontend URL
+];
+
 app.use(cors({
-    origin: "http://localhost:3001", // Allow frontend
-    methods: ["GET", "POST", "OPTIONS"], // Allow methods
-    allowedHeaders: ["Content-Type"], // Allow JSON
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("CORS not allowed"));
+        }
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"]
 }));
-app.options("*", cors()); // Allow preflight requests
+
+// ✅ Allow preflight requests
+app.options("*", cors());
 
 app.use(bodyParser.json());
 
