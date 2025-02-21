@@ -7,10 +7,10 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express(); 
 const PORT = process.env.PORT || 3000;
 
-// ✅ Enable CORS for both localhost and deployed frontend
+// ✅ Allow both localhost and deployed frontend on Vercel
 const allowedOrigins = [
-    "http://localhost:3001", // Local frontend
-    "https://bajajfrontend-xi.vercel.app/" // Replace with your Vercel frontend URL
+    "http://localhost:3001", 
+    "https://bajajfrontend-xi.vercel.app" // ✅ Add your frontend's actual Vercel URL
 ];
 
 app.use(cors({
@@ -22,10 +22,11 @@ app.use(cors({
         }
     },
     methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"]
+    allowedHeaders: ["Content-Type"],
+    credentials: true // ✅ Allow credentials if needed
 }));
 
-// ✅ Allow preflight requests
+// ✅ Handle preflight requests
 app.options("*", cors());
 
 app.use(bodyParser.json());
